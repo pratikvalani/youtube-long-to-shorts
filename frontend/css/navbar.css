@@ -1,0 +1,125 @@
+/* ===================================================================
+   Synapse — Minimal Header & Navbar
+   =================================================================== */
+
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color var(--duration-slow) var(--ease-smooth),
+    border-color var(--duration-slow) var(--ease-smooth),
+    backdrop-filter var(--duration-slow) var(--ease-smooth);
+  animation: navbarEntrance 600ms var(--ease-smooth) forwards;
+}
+
+@keyframes navbarEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scrolled state applied via JS scroll listener */
+.site-header.scrolled {
+  background-color: rgba(6, 10, 20, 0.52);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Brand */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+.brand-glyph {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+}
+
+.brand-glyph svg {
+  width: 100%;
+  height: 100%;
+  fill: var(--accent-film);
+}
+
+/* Navigation Links */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-link {
+  font-size: var(--small-size);
+  color: var(--text-secondary);
+  font-weight: 500;
+  transition: color var(--duration-fast) var(--ease-smooth);
+}
+
+.nav-link:hover {
+  color: var(--text-primary);
+}
+
+/* Header Action CTA */
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  background: var(--accent-film);
+  color: #fff;
+  font-size: var(--small-size);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition:
+    transform var(--duration-fast) var(--ease-smooth),
+    background var(--duration-fast) var(--ease-smooth);
+}
+
+.nav-cta:hover {
+  background: var(--accent-film-light);
+  transform: translateY(-1px);
+}
+
+.nav-cta:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .site-header {
+    height: 64px;
+  }
+  .nav-links {
+    display: none;
+  }
+}

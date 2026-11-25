@@ -1,0 +1,231 @@
+/* ===================================================================
+   Synapse — Base Styles & Typography
+   =================================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-size: var(--body-size);
+  line-height: var(--body-line-height);
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 78% 18%, rgba(255, 90, 54, 0.10), transparent 24rem),
+    radial-gradient(circle at 18% 76%, rgba(255, 202, 92, 0.055), transparent 28rem),
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: auto, auto, 72px 72px, 72px 72px;
+  mask-image: linear-gradient(to bottom, black 0%, black 82%, transparent 100%);
+}
+
+/* Subtle editorial film grain overlay (very faint, human texture) */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.025;
+  background-image: radial-gradient(#ffffff 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+
+/* ===================================================================
+   Photorealistic Rotating Earth Space Background
+   Authentic high-resolution 3D rotating Earth template from MotionSites
+   =================================================================== */
+.ambient-background {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 76% 16%, rgba(255,90,54,0.09), transparent 22rem),
+    #09090b;
+}
+
+.earth-bg-video {
+  display: none;
+}
+
+.earth-bg-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  min-width: 100vw;
+  min-height: 100vh;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  opacity: 1;
+  filter: contrast(1.12) brightness(1.28) saturate(1.24);
+  transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1);
+  will-change: transform;
+}
+
+/* Atmospheric spatial blend over the Earth */
+.earth-bg-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 45%,
+    transparent 25%,
+    rgba(2, 4, 10, 0.12) 60%,
+    rgba(2, 4, 10, 0.45) 100%
+  );
+}
+
+/* Vertical depth gradient: subtle edge vignette to keep rotating Earth bright & clear */
+.ambient-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(2, 4, 10, 0.22) 0%,
+    rgba(2, 4, 10, 0.05) 25%,
+    rgba(2, 4, 10, 0.08) 70%,
+    rgba(2, 4, 10, 0.45) 100%
+  );
+}
+
+/* Frosted Glass Utilities (translucent & clear) */
+.glass-panel {
+  background: rgba(8, 14, 26, 0.3);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+#navbarSlot {
+  position: relative;
+  z-index: 100;
+}
+
+#mainContent {
+  position: relative;
+  z-index: 1;
+}
+
+#footerSlot {
+  position: relative;
+  z-index: 1;
+}
+
+/* Links & interactive */
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity var(--duration-fast) var(--ease-smooth);
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Accessible focus visible */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background: rgba(56, 189, 248, 0.35);
+  color: #ffffff;
+}
+
+/* Container helper */
+.container {
+  width: 100%;
+  max-width: var(--max-width-page);
+  margin-inline: auto;
+  padding-inline: clamp(20px, 4vw, 48px);
+}
+
+/* Section spacing */
+.section {
+  padding-block: clamp(80px, 12vw, 160px);
+  position: relative;
+}
+
+/* Typography elements */
+h1, h2, h3, h4, h5 {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.serif-italic {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent-film-light);
+}
+
+/* Screen reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

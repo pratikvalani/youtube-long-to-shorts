@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClipFlow — Turn long videos into viral shorts</title>
+  <meta name="description"
+    content="Turn long podcasts, interviews, and talks into ready-to-publish vertical shorts in seconds." />
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+    rel="stylesheet" />
+
+  <!-- Modular Design System & Stylesheets -->
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/navbar.css" />
+  <link rel="stylesheet" href="css/hero.css" />
+  <link rel="stylesheet" href="css/timeline.css" />
+  <link rel="stylesheet" href="css/scroll-story.css" />
+  <link rel="stylesheet" href="css/converter.css" />
+  <link rel="stylesheet" href="css/processing.css" />
+  <link rel="stylesheet" href="css/results.css" />
+  <link rel="stylesheet" href="css/modal.css" />
+  <link rel="stylesheet" href="css/features.css" />
+  <link rel="stylesheet" href="css/how-it-works.css" />
+  <link rel="stylesheet" href="css/footer.css" />
+</head>
+
+<body>
+  <!-- Photorealistic Rotating Earth Space Background -->
+  <div class="ambient-background" id="ambientBackground" aria-hidden="true">
+    <video class="earth-bg-video" id="earthBgVideo" autoplay loop muted playsinline preload="auto">
+      <source src="/assets/earth_rotating_bg.mp4" type="video/mp4" />
+    </video>
+    <div class="earth-bg-overlay"></div>
+    <div class="ambient-vignette"></div>
+  </div>
+
+  <!-- Header / Navigation Slot -->
+  <div id="navbarSlot"></div>
+
+  <main id="mainContent">
+    <!-- Hero Section Slot -->
+    <div id="heroSlot"></div>
+
+    <!-- "Global Gateway" Style Timeline Transformation Slot -->
+    <div id="scrollExperienceSlot"></div>
+
+    <!-- Main Converter Form Slot -->
+    <div id="converterSlot"></div>
+
+    <!-- Real-time Processing Experience Slot -->
+    <div id="processingSlot"></div>
+
+    <!-- Results & Generated Shorts Grid Slot -->
+    <div id="resultsSlot"></div>
+
+    <!-- Features Section (Visual Story) Slot -->
+    <div id="featuresSlot"></div>
+
+    <!-- Technical Architecture / How It Works Slot -->
+    <div id="howItWorksSlot"></div>
+  </main>
+
+  <!-- Footer Slot -->
+  <div id="footerSlot"></div>
+
+  <!-- Application Module Entry Point -->
+  <script type="module" src="js/app.js"></script>
+</body>
+
+</html>

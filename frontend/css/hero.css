@@ -1,0 +1,219 @@
+/* ===================================================================
+   Synapse — Hero Section
+   Editorial typography, high contrast, video studio aesthetic.
+   =================================================================== */
+
+.hero-section {
+  min-height: 820px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 112px;
+  padding-bottom: 60px;
+  position: relative;
+}
+
+.hero-content {
+  max-width: 1180px;
+  margin: 0 auto;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  position: relative;
+}
+
+.hero-content::after {
+  content: '';
+  position: absolute;
+  right: clamp(-80px, 3vw, 20px);
+  top: 18%;
+  width: clamp(240px, 28vw, 420px);
+  aspect-ratio: 9 / 16;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 28px;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.08), transparent 42%),
+    radial-gradient(circle at 50% 28%, rgba(255,90,54,0.22), transparent 9rem),
+    rgba(12, 12, 15, 0.72);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.55);
+  transform: rotate(5deg);
+  z-index: -1;
+  backdrop-filter: blur(12px);
+}
+
+/* Staggered entrance animations */
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--small-size);
+  color: var(--accent-film);
+  letter-spacing: 0.04em;
+  opacity: 0;
+  animation: heroFadeUp 800ms var(--ease-smooth) 100ms forwards;
+}
+
+.hero-tag-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--accent-film);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+}
+
+.hero-headline {
+  font-size: clamp(48px, 8vw, 124px);
+  line-height: var(--hero-line-height);
+  letter-spacing: var(--hero-letter-spacing);
+  font-weight: 800;
+  color: var(--text-primary);
+  max-width: 12ch;
+  opacity: 0;
+  animation: heroHeadlineUp 900ms var(--ease-smooth) 250ms forwards;
+}
+
+@keyframes heroHeadlineUp {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-description {
+  font-size: clamp(17px, 1.8vw, 22px);
+  line-height: 1.5;
+  color: var(--text-secondary);
+  max-width: 54ch;
+  font-weight: 400;
+  opacity: 0;
+  animation: heroFadeUp 800ms var(--ease-smooth) 450ms forwards;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+  opacity: 0;
+  animation: heroFadeUp 800ms var(--ease-smooth) 600ms forwards;
+}
+
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Primary Action Button */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 32px;
+  border-radius: var(--radius-full);
+  background: var(--accent-film);
+  color: #fff;
+  font-size: 15.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition:
+    transform var(--duration-fast) var(--ease-smooth),
+    background var(--duration-fast) var(--ease-smooth),
+    box-shadow var(--duration-fast) var(--ease-smooth);
+}
+
+.btn-primary:hover {
+  background: var(--accent-film-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.12);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Secondary Ghost Action */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 26px;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  font-size: 15px;
+  font-weight: 500;
+  transition:
+    color var(--duration-fast) var(--ease-smooth),
+    border-color var(--duration-fast) var(--ease-smooth),
+    background var(--duration-fast) var(--ease-smooth);
+}
+
+.btn-secondary:hover {
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Hero Waveform Visualizer Container */
+.hero-timeline-stage {
+  margin-top: 36px;
+  width: 100%;
+  max-width: 960px;
+  border-radius: var(--radius-lg);
+  background: rgba(8, 14, 26, 0.28);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(56, 189, 248, 0.18);
+  padding: 14px 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  opacity: 0;
+  animation: heroTimelineReveal 1100ms var(--ease-smooth) 750ms forwards;
+}
+
+@keyframes heroTimelineReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-section {
+    padding-top: 90px;
+  }
+  .hero-headline {
+    font-size: 48px;
+  }
+  .hero-description {
+    font-size: 17px;
+  }
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .btn-primary, .btn-secondary {
+    width: 100%;
+  }
+}

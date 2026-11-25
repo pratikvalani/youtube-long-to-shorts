@@ -1,0 +1,277 @@
+/* ===================================================================
+   Synapse — "Global Gateway" Style Interactive Timeline Transformation
+   Cinematic multi-stage choreography:
+   01 Wide lecture timeline appears
+   02 Timeline moves horizontally
+   03 Key moments highlighted
+   04 Moments separate from main track
+   05 Transform into vertical 9:16 aspect cards
+   06 Move forward into final playable shorts
+   =================================================================== */
+
+.story-section {
+  position: relative;
+  padding-block: clamp(80px, 10vw, 140px);
+  background: radial-gradient(circle at 50% 30%, rgba(56, 189, 248, 0.05) 0%, transparent 60%);
+}
+
+.story-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 60px;
+}
+
+.story-label {
+  font-family: var(--font-mono);
+  font-size: var(--caption-size);
+  color: var(--accent-film);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.story-title {
+  font-size: var(--display-size);
+  line-height: var(--display-line-height);
+  letter-spacing: var(--display-letter-spacing);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.story-subtitle {
+  font-size: clamp(16px, 1.4vw, 19px);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Interactive Transformation Stage Container */
+.transformation-stage {
+  width: 100%;
+  max-width: 1060px;
+  margin: 0 auto;
+  background: rgba(8, 14, 26, 0.32);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  padding: 32px clamp(20px, 4vw, 40px);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Stage Navigation Tabs / Timeline Scrubber */
+.stage-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 36px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-hairline);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.stage-stepper::-webkit-scrollbar {
+  display: none;
+}
+
+.step-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+  font-size: var(--small-size);
+  color: var(--text-muted);
+  font-weight: 500;
+  background: transparent;
+  transition: all var(--duration-fast) var(--ease-smooth);
+  white-space: nowrap;
+}
+
+.step-btn .step-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+}
+
+.step-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.step-btn.active {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.step-btn.active .step-num {
+  background: var(--accent-film);
+  color: var(--text-inverse);
+  font-weight: 700;
+}
+
+/* Stage Scene Canvas */
+.scene-canvas {
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  perspective: 1200px;
+}
+
+/* Scene Narrative Caption */
+.scene-caption {
+  margin-top: 28px;
+  text-align: center;
+  font-size: 15.5px;
+  color: var(--text-secondary);
+  max-width: 540px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity var(--duration-normal) var(--ease-smooth);
+}
+
+.scene-caption strong {
+  color: var(--text-primary);
+}
+
+/* Stage Visual Representations */
+.visual-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all var(--duration-slow) var(--ease-smooth);
+}
+
+/* 9:16 Transformation Cards in Stage 5 & 6 */
+.aspect-cards-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  transition: all var(--duration-slow) var(--ease-smooth);
+}
+
+.aspect-card {
+  width: 190px;
+  aspect-ratio: 9 / 16;
+  background: rgba(10, 16, 28, 0.68);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 14px;
+  transition: transform var(--duration-slow) var(--ease-smooth),
+              box-shadow var(--duration-slow) var(--ease-smooth),
+              border-color var(--duration-slow) var(--ease-smooth);
+}
+
+.aspect-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.aspect-card-badge {
+  color: var(--accent-film);
+  font-weight: 600;
+  background: var(--accent-film-subtle);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.aspect-card-body {
+  margin-top: auto;
+}
+
+.aspect-card-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+
+.aspect-card-time {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent-film);
+}
+
+/* Play button overlay on card */
+.card-play-glyph {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  display: grid;
+  place-items: center;
+  color: #000000;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.card-play-glyph svg {
+  width: 14px;
+  height: 14px;
+  margin-left: 2px;
+}
+
+/* 3D perspective projection for final step */
+.scene-canvas[data-stage="6"] .aspect-card {
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px var(--border-hover);
+}
+
+.scene-canvas[data-stage="6"] .aspect-card:nth-child(2) {
+  transform: scale(1.08) translateZ(30px);
+  border-color: var(--accent-film);
+  z-index: 2;
+}
+
+.scene-canvas[data-stage="6"] .aspect-card:nth-child(1) {
+  transform: scale(0.95) rotateY(6deg);
+  opacity: 0.85;
+}
+
+.scene-canvas[data-stage="6"] .aspect-card:nth-child(3) {
+  transform: scale(0.95) rotateY(-6deg);
+  opacity: 0.85;
+}
+
+@media (max-width: 768px) {
+  .aspect-cards-container {
+    gap: 10px;
+  }
+  .aspect-card {
+    width: 140px;
+    padding: 10px;
+  }
+  .aspect-card-title {
+    font-size: 11.5px;
+  }
+}

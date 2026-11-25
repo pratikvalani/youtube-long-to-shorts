@@ -1,0 +1,164 @@
+/* ===================================================================
+   Synapse — Technical "How It Works" Section
+   "What's happening behind the scenes."
+   Clean sequential flow + expandable engineering details.
+   =================================================================== */
+
+.how-section {
+  padding-block: clamp(80px, 12vw, 140px);
+  position: relative;
+}
+
+.how-header {
+  text-align: left;
+  max-width: 680px;
+  margin-bottom: 56px;
+}
+
+.how-label {
+  font-family: var(--font-mono);
+  font-size: var(--caption-size);
+  color: var(--accent-film);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.how-title {
+  font-size: var(--display-size);
+  line-height: var(--display-line-height);
+  letter-spacing: var(--display-letter-spacing);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.how-subtitle {
+  font-size: clamp(16px, 1.4vw, 19px);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Sequential Pipeline Flow */
+.pipeline-flow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(8, 14, 26, 0.32);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  overflow-x: auto;
+  margin-bottom: 40px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.pipeline-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  min-width: 100px;
+}
+
+.node-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: rgba(6, 10, 20, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: grid;
+  place-items: center;
+  color: var(--text-primary);
+  font-size: 18px;
+}
+
+.node-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.node-subtext {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.pipeline-arrow {
+  color: var(--text-faint);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+/* Expandable Engineering Architecture Disclosure */
+.tech-spec-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--accent-film);
+  cursor: pointer;
+  padding: 10px 0;
+  user-select: none;
+  font-weight: 500;
+}
+
+.tech-spec-toggle svg {
+  transition: transform var(--duration-fast) var(--ease-smooth);
+}
+
+.tech-spec-toggle.open svg {
+  transform: rotate(180deg);
+}
+
+.tech-spec-content {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height var(--duration-normal) var(--ease-smooth), opacity var(--duration-normal) var(--ease-smooth);
+  margin-top: 16px;
+}
+
+.tech-spec-content.open {
+  max-height: 800px;
+  opacity: 1;
+}
+
+.tech-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  background: rgba(8, 14, 26, 0.32);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.tech-spec-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tech-spec-name {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent-film);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.tech-spec-val {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}

@@ -1,0 +1,163 @@
+/* ===================================================================
+   Synapse — Video Editing Timeline Visuals
+   Real video editing timeline aesthetic: timecodes, audio waveforms,
+   playhead, highlight markers, and 9:16 aspect transformation.
+   =================================================================== */
+
+.timeline-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  font-family: var(--font-mono);
+  font-size: var(--caption-size);
+  color: var(--text-muted);
+}
+
+.timeline-timecode {
+  color: var(--accent-film);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.timeline-timecode::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--accent-film);
+}
+
+/* Master Timeline Track (Translucent Audio/Video Waveform Animation) */
+.timeline-track-wrapper {
+  position: relative;
+  background: rgba(6, 10, 20, 0.42);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  padding: 16px 14px 14px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* Horizontal ruler time markers */
+.timeline-ruler {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: rgba(163, 167, 177, 0.7);
+  margin-bottom: 10px;
+  user-select: none;
+}
+
+/* Audio waveform strip */
+.timeline-wave-strip {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 3.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.waveform-bar {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 2px;
+  min-height: 4px;
+  transition: background var(--duration-fast) var(--ease-smooth), height 300ms var(--ease-smooth);
+}
+
+/* Highlighted moments on the timeline (Earth cyan glow) */
+.waveform-bar.highlighted {
+  background: var(--accent-film);
+  opacity: 1;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+}
+
+/* Traveling Playhead */
+.timeline-playhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: #ffffff;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.95), 0 0 4px #ffffff;
+  pointer-events: none;
+  animation: playheadTravel 12s linear infinite;
+}
+
+.timeline-playhead::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 10px;
+  height: 8px;
+  background: #ffffff;
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+  filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.8));
+}
+
+@keyframes playheadTravel {
+  0% { left: 0%; }
+  100% { left: 100%; }
+}
+
+/* Timeline transformation visual blocks */
+.timeline-cuts-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+  transition: transform var(--duration-slow) var(--ease-smooth);
+}
+
+.timeline-clip-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  transition: transform var(--duration-normal) var(--ease-smooth), border-color var(--duration-normal) var(--ease-smooth);
+}
+
+.timeline-clip-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-film-border);
+}
+
+.clip-ratio-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent-film);
+  background: var(--accent-film-subtle);
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  align-self: flex-start;
+}
+
+.clip-title-sample {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.clip-timestamp-sample {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}

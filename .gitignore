@@ -1,0 +1,45 @@
+# --- Python ---
+# Virtual environment
+/venv/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- Application Specific ---
+# Environment variables file (contains secrets)
+# IMPORTANT: Do not commit your API keys!
+backend/.env
+backend/.env.local
+*.env
+!.env.example
+
+# Auto-generated directories for media files
+backend/downloads/
+backend/output_shorts/
+backend/jobs.json
+backend/logs/
+backend/*.log
+*.log
+
+# --- Common ---
+# IDE/Editor specific files
+.vscode/
+.idea/
+
+# macOS specific
+.DS_Store
+
+# Python
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+
+# Media and temporary files
+*.part
+*.tmp
+*.zip
