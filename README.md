@@ -1,26 +1,29 @@
 # ClipFlow
 
-ClipFlow is a local YouTube-to-Shorts converter built with Python and Flask. It downloads a YouTube video, transcribes it with local OpenAI Whisper, selects highlights using local heuristics, crops clips to 9:16, and exports MP4 files.
+An API-free YouTube-to-Shorts converter that turns long videos into polished 9:16 clips.
 
 **Repository:** https://github.com/pratikvalani/youtube-long-to-shorts
 
-## Privacy and API-free operation
+## Overview
 
-- No third-party AI API key is required.
-- Audio and transcription run locally.
-- No external API is used for highlight selection.
-- The only remote input is the YouTube URL supplied for downloading.
-- No credentials or environment variables are required.
+ClipFlow downloads a YouTube video, transcribes it with local OpenAI Whisper, selects highlight segments with local heuristics, crops clips vertically, and exports MP4 files. It does not require an external AI API key.
 
 ## Features
 
-- YouTube video download through yt-dlp
-- Local Whisper transcription
+- YouTube video downloading through yt-dlp
+- Offline local Whisper transcription
 - Local highlight selection
-- 9:16 vertical cropping with OpenCV and FFmpeg
-- Live processing stages
-- Video preview and individual downloads
+- Automatic 9:16 vertical cropping
+- Real-time processing stages
+- Short preview and individual downloads
 - ZIP download for all generated shorts
+
+## API-free operation
+
+- No third-party AI API key is required.
+- No cloud transcription API is used.
+- No language-model API is used for highlight selection.
+- No credentials or `.env` file are needed.
 
 ## Technology
 
@@ -29,29 +32,27 @@ ClipFlow is a local YouTube-to-Shorts converter built with Python and Flask. It 
 | Web server | Flask |
 | Speech transcription | OpenAI Whisper |
 | Video download | yt-dlp |
-| Video processing | FFmpeg and OpenCV |
+| Video editing | FFmpeg and OpenCV |
 | Frontend | HTML, CSS, JavaScript |
 
 ## Requirements
 
 - Windows 10 or 11
-- Python 3.10+
-- Internet access for downloading YouTube media
-- Enough disk space for downloaded videos and generated clips
+- Python 3.10 or newer
+- Internet access for downloading YouTube videos
+- Sufficient disk space for source and generated media
 
-FFmpeg binaries are supplied through `imageio-ffmpeg`.
+FFmpeg is supplied through `imageio-ffmpeg`.
 
 ## Installation
-
-### Windows setup
 
 ```powershell
 setup.bat
 ```
 
-### Manual setup
+Or configure the environment manually:
 
-```powers
+```powershell
 python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
@@ -63,7 +64,7 @@ pip install -r requirements.txt
 run.bat
 ```
 
-Or run manually:
+Manual start:
 
 ```powershell
 venv\Scripts\activate
@@ -75,11 +76,11 @@ Open http://127.0.0.1:5000.
 
 ## Usage
 
-1. Paste a YouTube URL.
-2. Choose whether to export in 9:16 or landscape format.
+1. Paste a YouTube video URL.
+2. Enable 9:16 cropping if required.
 3. Start conversion.
 4. Wait for local transcription and rendering.
-5. Preview or download generated shorts.
+5. Preview or download the generated shorts.
 
 ## Project structure
 
@@ -88,9 +89,9 @@ backend/
   app.py
   processor.py
 frontend/
+  assets/
   css/
   js/
-  assets/
   index.html
 requirements.txt
 run.bat
@@ -98,23 +99,13 @@ setup.bat
 README.md
 ```
 
-## Generated and sensitive files
+## Gitignored files
 
-The following are created locally and excluded from Git:
-
-- `venv/`
-- `backend/.env*`
-- `backend/downloads/`
-- `backend/output_shorts/`
-- `backend/jobs.json`
-- Python cache and coverage files
-- Temporary media, logs, credentials, and ZIP files
+The repository excludes virtual environments, credentials, environment files, generated media, job state, logs, caches, archives, and temporary files.
 
 ## Troubleshooting
 
 **YouTube download fails**
-
-Update yt-dlp:
 
 ```powershell
 venv\Scripts\python.exe -m pip install --upgrade yt-dlp
@@ -122,11 +113,9 @@ venv\Scripts\python.exe -m pip install --upgrade yt-dlp
 
 **Transcription is slow**
 
-Use a shorter video or set `WHISPER_MODEL = "tiny"` in `backend/processor.py`.
+Set `WHISPER_MODEL = "tiny"` in `backend/processor.py` for faster transcription.
 
 **Port 5000 is occupied**
-
-Set the `PORT` environment variable before starting the server:
 
 ```powershell
 $env:PORT="5001"
