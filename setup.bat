@@ -56,16 +56,12 @@ echo  Setup Complete!
 echo ===============================================
 echo.
 echo Next steps:
-echo 1. Create .env file in backend/ folder with:
-echo    GROQ_API_KEY=your_groq_api_key_here
-echo    (Get free key at https://console.groq.com)
-echo.
-echo 2. Run the application with:
+echo 1. Run the application with:
 echo    python run.py
 echo    OR
 echo    run.bat
 echo.
-echo 3. Open browser to: http://localhost:5000
+echo 2. Open browser to: http://localhost:5000
 echo.
 
 pause

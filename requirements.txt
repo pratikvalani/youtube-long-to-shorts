@@ -1,9 +1,7 @@
 Flask
 Flask-Cors
-python-dotenv
 yt-dlp
 openai-whisper
 opencv-python
 numpy
-groq
 imageio-ffmpeg

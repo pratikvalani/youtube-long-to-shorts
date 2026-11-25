@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
     scrollToSection("processingSection");
 
     try {
-      const response = await videoApi.startConversion(url, crop, true);
+      const response = await videoApi.startConversion(url, crop);
       const jobId = response.job_id;
       sessionStorage.setItem("synapse_active_job", jobId);
       processingManager.start(jobId);

@@ -3,8 +3,8 @@
 """
 Core Video Processing & Multi-Modal AI Pipeline
 - YouTube Download via yt-dlp
-- High-Speed Cloud Whisper (Groq) with Local Whisper Fallback
-- Semantic Segment Intelligence via Groq LLMs (Compound / Qwen / GPT-OSS)
+- Local Whisper transcription
+- Local highlight selection
 - Intelligent 9:16 Re-Framing & Text Rendering with FFmpeg & OpenCV
 """
 
@@ -17,7 +17,6 @@ if hasattr(sys.stdout, "reconfigure"):
 if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
-import json
 import re
 import textwrap
 import subprocess
@@ -25,20 +24,13 @@ import tempfile
 from pathlib import Path
 from typing import List, Dict, Tuple, Any, Optional
 
-from dotenv import load_dotenv
-
 BACKEND_DIR = Path(__file__).parent.resolve()
 PROJECT_ROOT = BACKEND_DIR.parent.resolve()
-
-for env_path in [BACKEND_DIR / ".env", PROJECT_ROOT / ".env", BACKEND_DIR / ".env.example"]:
-    if env_path.exists():
-        load_dotenv(dotenv_path=env_path, override=False)
 
 import yt_dlp
 import whisper
 import cv2
 import numpy as np
-from groq import Groq
 
 OUTPUT_DIR = BACKEND_DIR / "output_shorts"
 DOWNLOAD_DIR = BACKEND_DIR / "downloads"
@@ -64,42 +56,7 @@ def get_ffmpeg() -> str:
 FFMPEG_EXE = get_ffmpeg()
 
 
-def get_groq_api_key() -> str:
-    """Reload environment variables to retrieve GROQ_API_KEY reliably."""
-    for env_path in [BACKEND_DIR / ".env", PROJECT_ROOT / ".env", BACKEND_DIR / ".env.example"]:
-        if env_path.exists():
-            load_dotenv(dotenv_path=env_path, override=False)
-    return os.environ.get("GROQ_API_KEY", "").strip()
-
-
-def get_groq_client() -> Optional[Groq]:
-    """Create a Groq client instance if API key is present."""
-    api_key = get_groq_api_key()
-    if not api_key:
-        return None
-    try:
-        return Groq(api_key=api_key)
-    except Exception as exc:
-        print(f"[Groq] Initialization error: {exc}")
-        return None
-
-
-GROQ_API_KEY = get_groq_api_key()
-groq_client = get_groq_client()
-
 WHISPER_MODEL = "base"   # local fallback model: tiny | base | small | medium
-
-# Active Groq Models Priority List
-ACTIVE_GROQ_MODELS = [
-    "groq/compound",
-    "qwen/qwen3.8-27b",
-    "openai/gpt-oss-120b",
-    "groq/compound-mini",
-    "openai/gpt-oss-20b",
-    "qwen/qwen3.6-27b",
-    "llama-3.3-70b-versatile",
-    "llama-3.1-8b-instant",
-]
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -142,7 +99,7 @@ def download_video(url: str) -> Tuple[Path, str]:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# STEP 2 — Audio Transcription (Groq Whisper Cloud or Local Fallback)
+# STEP 2 — Local Audio Transcription
 # ─────────────────────────────────────────────────────────────────────────────
 def extract_audio_track(video_path: Path, max_duration_sec: Optional[float] = None) -> Path:
     """Extract audio track as lightweight MP3 for fast Whisper transcription."""
@@ -168,62 +125,8 @@ def extract_audio_track(video_path: Path, max_duration_sec: Optional[float] = No
     return tmp_audio
 
 
-def transcribe_video(video_path: Path, prefer_cloud: bool = True) -> dict:
-    """
-    Transcribe audio with timestamped segments.
-    Uses high-speed Groq Whisper (1-2 seconds) if API key available;
-    otherwise falls back to local Whisper.
-    """
-    client = get_groq_client() if prefer_cloud else None
-
-    if client:
-        try:
-            print("[Transcribe] Initiating high-speed Cloud Whisper (Groq whisper-large-v3-turbo)...")
-            audio_path = extract_audio_track(video_path)
-            file_size_mb = audio_path.stat().st_size / (1024 * 1024)
-
-            # Groq audio upload limit is 25MB
-            if file_size_mb <= 24.5:
-                with open(audio_path, "rb") as af:
-                    transcription = client.audio.transcriptions.create(
-                        file=(audio_path.name, af.read()),
-                        model="whisper-large-v3-turbo",
-                        response_format="verbose_json"
-                    )
-
-                audio_path.unlink(missing_ok=True)
-
-                raw_segments = getattr(transcription, "segments", [])
-                segments = []
-                for s in raw_segments:
-                    if isinstance(s, dict):
-                        segments.append({
-                            "start": float(s.get("start", 0.0)),
-                            "end": float(s.get("end", 0.0)),
-                            "text": str(s.get("text", "")).strip()
-                        })
-                    else:
-                        segments.append({
-                            "start": float(getattr(s, "start", 0.0)),
-                            "end": float(getattr(s, "end", 0.0)),
-                            "text": str(getattr(s, "text", "")).strip()
-                        })
-
-                if segments:
-                    full_text = getattr(transcription, "text", "") or " ".join(s["text"] for s in segments)
-                    print(f"[Transcribe] Cloud Whisper completed: {len(segments)} segments extracted.")
-                    return {"text": full_text, "segments": segments}
-            else:
-                print(f"[Transcribe] Audio size ({file_size_mb:.1f}MB) exceeds cloud limit; switching to local Whisper.")
-                audio_path.unlink(missing_ok=True)
-
-        except Exception as exc:
-            print(f"[Transcribe] Cloud Whisper failed ({exc}); switching to local Whisper...")
-            # Clean up temp audio if created
-            audio_file = video_path.parent / f"_tmp_audio_{video_path.stem}.mp3"
-            audio_file.unlink(missing_ok=True)
-
-    # Local Whisper fallback
+def transcribe_video(video_path: Path) -> dict:
+    """Transcribe audio locally with OpenAI Whisper."""
     print(f"[Transcribe] Loading local Whisper '{WHISPER_MODEL}' model (offline CPU/GPU)...")
     model = whisper.load_model(WHISPER_MODEL)
     print("[Transcribe] Transcribing video stream...")
@@ -233,7 +136,7 @@ def transcribe_video(video_path: Path, prefer_cloud: bool = True) -> dict:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# STEP 3 — Groq AI Semantic Segment Intelligence
+# STEP 3 — Local Semantic Segment Selection
 # ─────────────────────────────────────────────────────────────────────────────
 ANALYSIS_PROMPT = """
 You are an expert academic curriculum designer and educational video analyst.
@@ -318,68 +221,11 @@ def sanitize_segments(segments: list, max_duration: float = 3600.0) -> list:
 
 
 def analyze_transcript(transcript_result: dict, video_title: str) -> list:
-    """
-    Analyze transcript using Groq AI LLM models to identify 5-6 high-yield key moments.
-    Tries verified active Groq models in order, falling back gracefully to local segment selection.
-    """
-    client = get_groq_client()
+    """Select highlight segments using local transcript heuristics."""
     transcript_segments = transcript_result.get("segments", [])
     if not transcript_segments:
         raise ValueError("No speech or audio segments detected in the video.")
-
-    total_video_duration = float(transcript_segments[-1].get("end", 0.0))
-
-    if not client:
-        print("[AI Analysis] GROQ_API_KEY not configured. Using heuristic local segment selection.")
-        return select_fallback_segments(transcript_result)
-
-    lines = [
-        f"[{float(s['start']):.1f}s - {float(s['end']):.1f}s]: {str(s.get('text', '')).strip()}"
-        for s in transcript_segments
-    ]
-    transcript_text = "\n".join(lines)
-    if len(transcript_text) > 24000:
-        transcript_text = transcript_text[:24000] + "\n...[transcript truncated for context budget]"
-
-    # Discover active models from Groq API if possible
-    model_candidates = list(ACTIVE_GROQ_MODELS)
-    try:
-        available_models = [m.id for m in client.models.list().data]
-        # Prepend any discovered active model that's in our priority list
-        model_candidates = [m for m in ACTIVE_GROQ_MODELS if m in available_models] + [
-            m for m in model_candidates if m not in available_models
-        ]
-    except Exception:
-        pass
-
-    last_error = None
-    for model_name in model_candidates:
-        try:
-            print(f"[AI Analysis] Querying Groq model: '{model_name}'...")
-            resp = client.chat.completions.create(
-                model=model_name,
-                messages=[
-                    {"role": "system", "content": ANALYSIS_PROMPT},
-                    {"role": "user", "content": f"Video Title: {video_title}\n\nTranscript:\n{transcript_text}"},
-                ],
-                temperature=0.2,
-                max_tokens=2048,
-            )
-            raw_content = resp.choices[0].message.content or ""
-            cleaned = clean_json_response(raw_content)
-            parsed = json.loads(cleaned)
-
-            if isinstance(parsed, list) and len(parsed) > 0:
-                sanitized = sanitize_segments(parsed, max_duration=total_video_duration)
-                print(f"[AI Analysis] Groq ({model_name}) successfully extracted {len(sanitized)} conceptual shorts.")
-                return sanitized
-
-        except Exception as exc:
-            last_error = exc
-            print(f"[AI Analysis] Groq model '{model_name}' skipped: {exc}")
-            continue
-
-    print(f"[AI Analysis] All Groq model endpoints were unavailable ({last_error}). Using local segment selection.")
+    print("[AI Analysis] Using local highlight selection (no external AI API).")
     return select_fallback_segments(transcript_result)
 
 
@@ -689,12 +535,11 @@ def export_short(source_video: Path, segment: dict, idx: int, crop: bool = True)
 def convert(
     youtube_url: str,
     crop_to_vert: bool = True,
-    progress_callback=None,
-    use_cloud_whisper: bool = True
+    progress_callback=None
 ) -> List[Dict[str, Any]]:
     """
     Master pipeline executing:
-    Stream Ingestion -> Neural Transcription -> Groq AI Analysis -> FFmpeg Clipping & Render.
+    Stream Ingestion -> Local Whisper Transcription -> Local Highlight Analysis -> FFmpeg Clipping & Render.
     Returns list of dicts with generated file info and conceptual metadata.
     """
     print("\n========================================================")
@@ -707,7 +552,7 @@ def convert(
 
     if progress_callback:
         progress_callback("transcribing")
-    transcript = transcribe_video(video_path, prefer_cloud=use_cloud_whisper)
+    transcript = transcribe_video(video_path)
 
     if progress_callback:
         progress_callback("analyzing")

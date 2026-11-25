@@ -30,9 +30,9 @@ if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
 try:
-    from processor import convert, get_groq_api_key, get_groq_client, ACTIVE_GROQ_MODELS, get_ffmpeg
+    from processor import convert, get_ffmpeg
 except ImportError:
-    from backend.processor import convert, get_groq_api_key, get_groq_client, ACTIVE_GROQ_MODELS, get_ffmpeg
+    from backend.processor import convert, get_ffmpeg
 
 app = Flask(__name__, static_folder=str(FRONTEND_DIR), static_url_path="/")
 CORS(app)
@@ -63,7 +63,7 @@ def save_jobs():
 jobs: dict = load_jobs()
 
 
-def run_job(job_id: str, url: str, crop: bool, use_cloud_whisper: bool = True):
+def run_job(job_id: str, url: str, crop: bool):
     try:
         with jobs_lock:
             jobs[job_id]["status"] = "processing"
@@ -83,8 +83,7 @@ def run_job(job_id: str, url: str, crop: bool, use_cloud_whisper: bool = True):
         results = convert(
             url,
             crop_to_vert=crop,
-            progress_callback=update_stage,
-            use_cloud_whisper=use_cloud_whisper
+            progress_callback=update_stage
         )
 
         with jobs_lock:
@@ -112,7 +111,7 @@ def run_job(job_id: str, url: str, crop: bool, use_cloud_whisper: bool = True):
 @app.route("/api/convert", methods=["POST"])
 def start_conversion():
     """
-    Body JSON: { "url": "<youtube_url>", "crop": true, "cloud_whisper": true }
+    Body JSON: { "url": "<youtube_url>", "crop": true }
     Returns:   { "job_id": "..." }
     """
     try:
@@ -125,7 +124,6 @@ def start_conversion():
         return jsonify({"error": "YouTube URL is required"}), 400
 
     crop = bool(data.get("crop", True))
-    use_cloud_whisper = bool(data.get("cloud_whisper", True))
     job_id = str(uuid.uuid4())
 
     with jobs_lock:
@@ -143,7 +141,7 @@ def start_conversion():
 
     t = threading.Thread(
         target=run_job,
-        args=(job_id, url, crop, use_cloud_whisper),
+        args=(job_id, url, crop),
         daemon=True
     )
     t.start()
@@ -251,26 +249,10 @@ def download_all_shorts(job_id: str):
 
 @app.route("/api/system-status")
 def system_status():
-    """Diagnostic endpoint checking Groq connectivity, Whisper availability, and active models."""
-    api_key = get_groq_api_key()
-    groq_online = False
-    active_models = []
-
-    if api_key:
-        try:
-            client = get_groq_client()
-            if client:
-                models_data = client.models.list().data
-                active_models = [m.id for m in models_data]
-                groq_online = True
-        except Exception:
-            groq_online = False
-
+    """Diagnostic endpoint for local processing dependencies."""
     return jsonify({
         "status": "healthy",
-        "groq_api_configured": bool(api_key),
-        "groq_api_online": groq_online,
-        "active_groq_models": active_models or ACTIVE_GROQ_MODELS,
+        "external_api_required": False,
         "whisper_local": True,
         "ffmpeg_path": get_ffmpeg(),
     })

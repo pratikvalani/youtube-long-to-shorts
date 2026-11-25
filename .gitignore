@@ -1,3 +1,17 @@
+# Authentication and credentials
+backend/.env
+backend/.env.*
+*.pem
+*.key
+*.crt
+secrets/
+.secrets/
+credentials*.json
+service-account*.json
+.env
+.env.*
+!.env.example
+
 # --- Python ---
 # Virtual environment
 /venv/

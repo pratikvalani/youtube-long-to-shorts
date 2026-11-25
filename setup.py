@@ -45,27 +45,15 @@ def main():
     requirements = project_root / "requirements.txt"
     subprocess.run([str(python_exe), "-m", "pip", "install", "-r", str(requirements)], check=True)
     
-    # Create .env template if needed
-    print("\n[4/4] Checking environment configuration...")
-    env_file = project_root / "backend" / ".env"
-    env_example = project_root / "backend" / ".env.example"
-    
-    if not env_file.exists() and env_example.exists():
-        print("⚠️  No .env file found!")
-        print("✓ Copy template: cp backend/.env.example backend/.env")
-        print("✓ Then edit and add your Groq API key")
-    elif env_file.exists():
-        print("✓ .env file found")
+    print("\n[4/4] No API key or environment configuration required")
     
     print("\n" + "="*60)
     print("  ✅ Setup Complete!")
     print("="*60)
     print("\nNext steps:")
-    print("1. Add your Groq API key to backend/.env")
-    print("   Get free key from: https://console.groq.com")
-    print("\n2. Run the app:")
+    print("1. Run the app:")
     print("   python run.py")
-    print("\n3. Open browser to:")
+    print("\n2. Open browser to:")
     print("   http://localhost:5000")
     print("\n" + "="*60 + "\n")
 

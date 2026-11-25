@@ -1,75 +1,69 @@
 # ClipFlow
 
-**Turn long YouTube videos into polished, vertical short-form clips.**
+ClipFlow is a local YouTube-to-Shorts converter built with Python and Flask. It downloads a YouTube video, transcribes it with local OpenAI Whisper, selects highlights using local heuristics, crops clips to 9:16, and exports MP4 files.
 
-ClipFlow is an AI-assisted video editing web app built with Flask, Whisper, Groq, FFmpeg, OpenCV, and yt-dlp. It downloads a YouTube video, transcribes the audio, identifies strong moments, and exports ready-to-publish 9:16 MP4 shorts.
+**Repository:** https://github.com/pratikvalani/youtube-long-to-shorts
+
+## Privacy and API-free operation
+
+- No third-party AI API key is required.
+- Audio and transcription run locally.
+- No external API is used for highlight selection.
+- The only remote input is the YouTube URL supplied for downloading.
+- No credentials or environment variables are required.
 
 ## Features
 
-- YouTube link ingestion
-- Local or cloud Whisper transcription
-- AI-powered highlight and segment selection
-- Automatic 9:16 cropping
-- Real-time processing status
-- Generated shorts preview and download
-- ZIP export for completed jobs
-- Modern responsive web interface
+- YouTube video download through yt-dlp
+- Local Whisper transcription
+- Local highlight selection
+- 9:16 vertical cropping with OpenCV and FFmpeg
+- Live processing stages
+- Video preview and individual downloads
+- ZIP download for all generated shorts
 
 ## Technology
 
 | Component | Technology |
 |---|---|
-| Backend | Python, Flask |
-| Speech transcription | Whisper |
-| AI analysis | Groq |
+| Web server | Flask |
+| Speech transcription | OpenAI Whisper |
 | Video download | yt-dlp |
-| Video editing | FFmpeg, OpenCV |
+| Video processing | FFmpeg and OpenCV |
 | Frontend | HTML, CSS, JavaScript |
 
 ## Requirements
 
-- Windows 10/11
-- Python 3.10 or newer
-- Groq API key
-- Internet connection
+- Windows 10 or 11
+- Python 3.10+
+- Internet access for downloading YouTube media
+- Enough disk space for downloaded videos and generated clips
 
-FFmpeg is supplied through `imageio-ffmpeg`; a separate FFmpeg installation is not required.
+FFmpeg binaries are supplied through `imageio-ffmpeg`.
 
-## Setup
+## Installation
 
-### 1. Create a virtual environment
+### Windows setup
 
 ```powershell
-python -m venv venv
+setup.bat
 ```
 
-### 2. Install dependencies
+### Manual setup
 
-```powershell
+```powers
+python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 3. Configure your Groq API key
-
-Copy `backend/.env.example` to `backend/.env`, then add your key:
-
-```env
-GROQ_API_KEY=your_groq_api_key_here
-PORT=5000
-```
-
-Create a free Groq API key at <https://console.groq.com>.
-
 ## Run
-
-Windows:
 
 ```powershell
 run.bat
 ```
 
-Or manually:
+Or run manually:
 
 ```powershell
 venv\Scripts\activate
@@ -77,49 +71,64 @@ cd backend
 python app.py
 ```
 
-Open <http://127.0.0.1:5000>.
+Open http://127.0.0.1:5000.
 
 ## Usage
 
-1. Paste a YouTube video URL.
-2. Enable or disable 9:16 cropping.
+1. Paste a YouTube URL.
+2. Choose whether to export in 9:16 or landscape format.
 3. Start conversion.
-4. Follow the processing stages.
-5. Preview and download the generated shorts.
+4. Wait for local transcription and rendering.
+5. Preview or download generated shorts.
 
-## Project Structure
+## Project structure
 
 ```text
 backend/
   app.py
   processor.py
-  .env.example
 frontend/
-  index.html
   css/
   js/
+  assets/
+  index.html
 requirements.txt
 run.bat
 setup.bat
 README.md
 ```
 
-## Generated Files
+## Generated and sensitive files
 
-Downloaded videos and rendered shorts are stored locally in:
+The following are created locally and excluded from Git:
 
+- `venv/`
+- `backend/.env*`
 - `backend/downloads/`
 - `backend/output_shorts/`
-
-These directories are intentionally excluded from Git.
+- `backend/jobs.json`
+- Python cache and coverage files
+- Temporary media, logs, credentials, and ZIP files
 
 ## Troubleshooting
 
-- **Groq API not configured:** confirm `backend/.env` contains a valid `GROQ_API_KEY`.
-- **Port 5000 is busy:** set `PORT=5001` in `backend/.env`.
-- **Local Whisper is slow:** use cloud transcription or choose a shorter test video.
-- **YouTube download fails:** update yt-dlp with `venv\Scripts\python.exe -m pip install --upgrade yt-dlp`.
+**YouTube download fails**
 
-## License
+Update yt-dlp:
 
-Add a license if you plan to distribute this project publicly.
+```powershell
+venv\Scripts\python.exe -m pip install --upgrade yt-dlp
+```
+
+**Transcription is slow**
+
+Use a shorter video or set `WHISPER_MODEL = "tiny"` in `backend/processor.py`.
+
+**Port 5000 is occupied**
+
+Set the `PORT` environment variable before starting the server:
+
+```powershell
+$env:PORT="5001"
+venv\Scripts\python.exe backend\app.py
+```

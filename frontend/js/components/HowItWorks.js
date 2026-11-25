@@ -86,14 +86,14 @@ export function renderHowItWorks(container) {
               <div class="tech-spec-item">
                 <span class="tech-spec-name">Acoustic Transcription</span>
                 <span class="tech-spec-val">
-                  Groq Cloud Whisper-large-v3 turbo for sub-second word-level timestamps, with automatic fallback to offline local Whisper model.
+                  OpenAI Whisper runs locally to create timestamped transcript segments without sending audio to an external API.
                 </span>
               </div>
 
               <div class="tech-spec-item">
                 <span class="tech-spec-name">Content & Retention Reasoning</span>
                 <span class="tech-spec-val">
-                  Groq Compound & Qwen-3.8 evaluate transcript chunks for narrative yield, identifying standalone hooks and insights without dangling context.
+                  Local transcript heuristics evaluate segment length and story coverage to select balanced highlights without an external AI API.
                 </span>
               </div>
 

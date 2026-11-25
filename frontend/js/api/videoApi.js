@@ -10,16 +10,14 @@ export const videoApi = {
    * Start conversion for a YouTube lecture
    * @param {string} url - Validated YouTube URL
    * @param {boolean} crop - Whether to crop to vertical (9:16)
-   * @param {boolean} cloudWhisper - Whether to prefer cloud Whisper transcription
    * @returns {Promise<{ job_id: string, status: string }>}
    */
-  async startConversion(url, crop = true, cloudWhisper = true) {
+  async startConversion(url, crop = true) {
     return request("/api/convert", {
       method: "POST",
       body: JSON.stringify({
         url: url.trim(),
         crop: Boolean(crop),
-        cloud_whisper: Boolean(cloudWhisper),
       }),
     });
   },
